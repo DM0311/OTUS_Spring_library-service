@@ -98,7 +98,7 @@ public class CommentController {
         return commentService.getCommentsByBook(bookId);
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/api/comment/user/{userId}")
     public List<CommentRespDto> getCommentsByUser(@PathVariable Long userId) {
         return commentService.getCommentsByUser(userId);
     }

@@ -1,5 +1,7 @@
 package com.otus.library.library_service.dto.request;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,7 +15,8 @@ public class CommentReqDto {
     @NotNull(message = "ID книги обязательно")
     private Long bookId;
 
-    @Size(min = 1, max = 100, message = "Оценка от 1 до 5")
+    @Min(value = 1, message = "Рейтинг должен быть от 1 до 5")
+    @Max(value = 5, message = "Рейтинг должен быть от 1 до 5")
     private int rating;
 
     private String commentText;

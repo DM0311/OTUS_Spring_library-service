@@ -1,4 +1,4 @@
-package com.otus.library.library_service.listener;
+package com.otus.library.library_service.listeners;
 
 import com.otus.library.library_service.events.NotificationEvent;
 import com.otus.library.library_service.model.entity.Notification;

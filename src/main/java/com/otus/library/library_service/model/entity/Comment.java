@@ -50,12 +50,7 @@ public class Comment {
     @Column(name = "comment_text", columnDefinition = "TEXT")
     private String commentText;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    //TODO - clean up
-//    @PrePersist
-//    protected void onCreate() {
-//        createdAt = LocalDateTime.now();
-//    }
 }

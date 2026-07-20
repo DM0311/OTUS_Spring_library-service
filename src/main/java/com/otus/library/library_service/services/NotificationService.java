@@ -1,4 +1,4 @@
-package com.otus.library.library_service.services.impl;
+package com.otus.library.library_service.services;
 
 import com.otus.library.library_service.model.entity.Notification;
 

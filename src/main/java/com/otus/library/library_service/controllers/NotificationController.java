@@ -2,7 +2,7 @@ package com.otus.library.library_service.controllers;
 
 import com.otus.library.library_service.dto.response.NotificationRespDto;
 import com.otus.library.library_service.mappers.NotificationMapper;
-import com.otus.library.library_service.services.impl.NotificationService;
+import com.otus.library.library_service.services.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
