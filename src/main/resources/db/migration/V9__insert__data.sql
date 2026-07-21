@@ -20,10 +20,10 @@ VALUES  ('Лев Толстой'),
 
 INSERT INTO users (email, username, full_name, password, is_blocked, blocked_until, penalty_points, created_at)
 VALUES
-    ('admin@library.com', 'admin', 'Администратор', '$2a$10$XURP5hsWErT9fR9E7V4P3eDf5y5g5h6j7k8l9m0n1b2c3d4e5f6g7h8i9j0k', false, NULL, 0, CURRENT_TIMESTAMP),
-    ('ivanov@mail.ru', 'ivanov', 'Иван Иванов', '$2a$10$XURP5hsWErT9fR9E7V4P3eDf5y5g5h6j7k8l9m0n1b2c3d4e5f6g7h8i9j0k', false, NULL, 0, CURRENT_TIMESTAMP),
-    ('petrov@mail.ru', 'petrov', 'Пётр Петров', '$2a$10$XURP5hsWErT9fR9E7V4P3eDf5y5g5h6j7k8l9m0n1b2c3d4e5f6g7h8i9j0k', true, CURRENT_TIMESTAMP + INTERVAL '7 days', 5, CURRENT_TIMESTAMP),
-    ('sidorova@mail.ru', 'sidorova', 'Анна Сидорова', '$2a$10$XURP5hsWErT9fR9E7V4P3eDf5y5g5h6j7k8l9m0n1b2c3d4e5f6g7h8i9j0k', false, NULL, 2, CURRENT_TIMESTAMP);
+    ('admin@library.com', 'admin', 'Администратор', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K', false, NULL, 0, CURRENT_TIMESTAMP),
+    ('ivanov@mail.ru', 'ivanov', 'Иван Иванов', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K', false, NULL, 0, CURRENT_TIMESTAMP),
+    ('petrov@mail.ru', 'petrov', 'Пётр Петров', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K', true, CURRENT_TIMESTAMP + INTERVAL '7 days', 5, CURRENT_TIMESTAMP),
+    ('sidorova@mail.ru', 'sidorova', 'Анна Сидорова', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K', false, NULL, 2, CURRENT_TIMESTAMP);
 
 INSERT INTO user_roles (user_id, role_name)
 VALUES

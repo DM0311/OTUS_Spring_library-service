@@ -6,6 +6,8 @@ import com.otus.library.library_service.events.AuditEvent;
 import com.otus.library.library_service.model.entity.Author;
 import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.services.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +25,20 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Author controller")
 public class AuthorController {
 
     private final AuthorService authorService;
 
     private final ApplicationEventPublisher eventPublisher;
 
+    @Operation(summary = "getAllAuthors", description = "Find all authors.")
     @GetMapping("api/author")
     List<AuthorRespDto> getAllAuthors() {
         return authorService.findAll();
     }
 
+    @Operation(summary = "createAuthor", description = "Add new author.")
     @PostMapping("/api/author")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorRespDto createAuthor(@Valid @RequestBody AuthorReqDto request, HttpServletRequest servletRequest) {
@@ -42,14 +47,15 @@ public class AuthorController {
                 .user(null)
                 .actionType(ActionType.AUTHOR_CREATE)
                 .entityType(Author.class.getSimpleName())
-                .entityId(authorRespDto.getId())
-                .details("Создан автор " + authorRespDto.getFullName() + " с id: " + authorRespDto.getId())
+                .entityId(authorRespDto.id())
+                .details("Создан автор " + authorRespDto.fullName() + " с id: " + authorRespDto.id())
                 .endpoint(servletRequest.getRequestURI())
                 .httpMethod(servletRequest.getMethod())
                 .build());
         return authorRespDto;
     }
 
+    @Operation(summary = "deleteAuthor", description = "Delete author by ID")
     @DeleteMapping("/api/author/{id}")
     public void deleteAuthor(@PathVariable("id") long id, HttpServletRequest servletRequest) {
         authorService.deleteById(id);

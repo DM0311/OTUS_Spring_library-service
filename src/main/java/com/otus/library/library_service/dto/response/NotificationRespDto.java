@@ -1,24 +1,23 @@
 package com.otus.library.library_service.dto.response;
 
 import com.otus.library.library_service.model.enums.NotificationType;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class NotificationRespDto {
+public record NotificationRespDto(
 
-    private Long id;
+        Long id,
 
-    private Long userId;
+        Long userId,
 
-    private String userName;
+        String userName,
 
-    private NotificationType type;
+        NotificationType type,
 
-    private String message;
+        String message,
 
-    private boolean isRead;
+        boolean isRead,
 
-    private LocalDateTime createdAt;
+        LocalDateTime createdAt
+) {
 }

@@ -1,29 +1,29 @@
 package com.otus.library.library_service.dto.response;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
-public class BookRespDto {
-    private Long id;
 
-    private String title;
+public record BookRespDto(
+        Long id,
 
-    private String year;
+        String title,
 
-    private String description;
+        String year,
 
-    private Integer totalCopies;
+        String description,
 
-    private Integer availableCopies;
+        Integer totalCopies,
 
-    private Double rating;
+        Integer availableCopies,
 
-    private LocalDateTime createdAt;
+        Double rating,
 
-    private Set<AuthorRespDto> authors;
+        LocalDateTime createdAt,
 
-    private Set<GenreRespDto> genres;
+        Set<AuthorRespDto> authors,
+
+        Set<GenreRespDto> genres
+) {
+
 }

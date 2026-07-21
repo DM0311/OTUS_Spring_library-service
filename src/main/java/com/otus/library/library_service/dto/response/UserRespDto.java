@@ -1,29 +1,28 @@
 package com.otus.library.library_service.dto.response;
 
 import com.otus.library.library_service.model.enums.Role;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
-public class UserRespDto {
+public record UserRespDto(
 
-    private long id;
+        long id,
 
-    private String email;
+        String email,
 
-    private String userName;
+        String userName,
 
-    private String fullName;
+        String fullName,
 
-    private boolean isBlocked;
+        boolean isBlocked,
 
-    private LocalDateTime blockedUntil;
+        LocalDateTime blockedUntil,
 
-    private int penaltyPoints;
+        int penaltyPoints,
 
-    private Set<Role> roles;
+        Set<Role> roles,
 
-    private LocalDateTime createdAt;
+        LocalDateTime createdAt
+) {
 }

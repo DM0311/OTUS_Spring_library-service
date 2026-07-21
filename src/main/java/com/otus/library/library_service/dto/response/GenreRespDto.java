@@ -1,11 +1,9 @@
 package com.otus.library.library_service.dto.response;
 
-import lombok.Data;
+public record GenreRespDto(
 
-@Data
-public class GenreRespDto {
+        long id,
 
-    private long id;
-
-    private String name;
+        String name
+) {
 }

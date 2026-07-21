@@ -1,11 +1,10 @@
 package com.otus.library.library_service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 
-@Data
-public class AuthorReqDto {
+public record AuthorReqDto(
 
-    @NotBlank(message = "Полное имя автора обязательно")
-    private String fullName;
+        @NotBlank(message = "Полное имя автора обязательно")
+        String fullName
+) {
 }

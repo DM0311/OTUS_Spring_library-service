@@ -1,27 +1,25 @@
 package com.otus.library.library_service.dto.response;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
-public class CommentRespDto {
 
-    private Long id;
+public record CommentRespDto(
 
-    private Long userId;
+        Long id,
 
-    private String userName;
+        Long userId,
 
-    private Long bookId;
+        String userName,
 
-    private String bookTitle;
+        Long bookId,
 
-    private int rating;
+        String bookTitle,
 
-    private String commentText;
+        int rating,
 
-    private LocalDateTime createdAt;
+        String commentText,
 
+        LocalDateTime createdAt
+) {
 
 }

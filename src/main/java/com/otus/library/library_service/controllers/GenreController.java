@@ -6,6 +6,8 @@ import com.otus.library.library_service.events.AuditEvent;
 import com.otus.library.library_service.model.entity.Genre;
 import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.services.GenreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +25,20 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Genre controller")
 public class GenreController {
 
     private final GenreService genreService;
 
     private final ApplicationEventPublisher eventPublisher;
 
+    @Operation(summary = "getAllGenres", description = "Get all available genres")
     @GetMapping("/api/genre")
     public List<GenreRespDto> getAllGenres() {
         return genreService.findAll();
     }
 
+    @Operation(summary = "createGenr", description = "Add a new genre")
     @PostMapping("/api/genre")
     @ResponseStatus(HttpStatus.CREATED)
     public GenreRespDto createGenre(@Valid @RequestBody GenreReqDto request, HttpServletRequest servletRequest) {
@@ -42,14 +47,15 @@ public class GenreController {
                 .user(null)
                 .actionType(ActionType.GENRE_CREATE)
                 .entityType(Genre.class.getSimpleName())
-                .entityId(genreRespDto.getId())
-                .details("Создан жанр " + genreRespDto.getName() + " с id: " + genreRespDto.getId())
+                .entityId(genreRespDto.id())
+                .details("Создан жанр " + genreRespDto.name() + " с id: " + genreRespDto.id())
                 .endpoint(servletRequest.getRequestURI())
                 .httpMethod(servletRequest.getMethod())
                 .build());
         return genreRespDto;
     }
 
+    @Operation(summary = "deleteGenre", description = "Delete genre")
     @DeleteMapping("/api/genre/{id}")
     public void deleteGenre(@PathVariable("id") long id, HttpServletRequest servletRequest) {
         genreService.deleteById(id);

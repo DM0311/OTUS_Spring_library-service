@@ -7,6 +7,8 @@ import com.otus.library.library_service.model.entity.Booking;
 import com.otus.library.library_service.model.entity.User;
 import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.services.BookingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Booking controller")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -36,6 +39,7 @@ public class BookingController {
         return null; // TODO: заменить на SecurityContext
     }
 
+    @Operation(summary = "createBooking", description = "Create booking - take a book for reading.")
     @PostMapping("/api/booking")
     @ResponseStatus(HttpStatus.CREATED)
     public BookingRespDto createBooking(@Valid @RequestBody BookingReqDto request,
@@ -50,7 +54,7 @@ public class BookingController {
                 .user(getCurrentUser())
                 .actionType(ActionType.BOOKING_CREATE)
                 .entityType(Booking.class.getSimpleName())
-                .entityId(bookingResp.getId())
+                .entityId(bookingResp.id())
                 .details(String.format("Пользователь %d взял книгу %d", request.getUserId(), request.getBookId()))
                 .endpoint(httpRequest.getRequestURI())
                 .httpMethod(httpRequest.getMethod())
@@ -60,6 +64,7 @@ public class BookingController {
         return bookingResp;
     }
 
+    @Operation(summary = "prolongBooking", description = "Prolong reading time.")
     @PutMapping("/api/booking/{id}/prolong")
     public BookingRespDto prolongBooking(@PathVariable Long id,
                                          HttpServletRequest httpRequest) {
@@ -77,6 +82,7 @@ public class BookingController {
         return bookingResp;
     }
 
+    @Operation(summary = "returnBook", description = "Return book back.")
     @PutMapping("/api/booking/{id}/return")
     public BookingRespDto returnBook(@PathVariable Long id,
                                      HttpServletRequest httpRequest) {
@@ -93,6 +99,7 @@ public class BookingController {
         return bookingResp;
     }
 
+    @Operation(summary = "cancelBooking", description = "Cancel booking - return book back")
     @DeleteMapping("/api/booking/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelBooking(@PathVariable Long id,
@@ -109,16 +116,19 @@ public class BookingController {
                 .build());
     }
 
+    @Operation(summary = "getMyBookings", description = "Get all bookings of current user.")
     @GetMapping("/api/booking/my")
     public List<BookingRespDto> getMyBookings(@RequestParam Long userId) {
         return bookingService.getBookingsByUser(userId);
     }
 
+    @Operation(summary = "getAllBookings", description = "Get all bookings.")
     @GetMapping("/api/booking/admin")
     public List<BookingRespDto> getAllBookings() {
         return bookingService.getAllBookings();
     }
 
+    @Operation(summary = "getBookingById", description = "Get definite booking by ID.")
     @GetMapping("/api/booking/admin/{bookingId}")
     public BookingRespDto getBookingById(@PathVariable Long
                                                      bookingId) {

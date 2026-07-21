@@ -7,6 +7,8 @@ import com.otus.library.library_service.model.entity.Comment;
 import com.otus.library.library_service.model.entity.User;
 import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.services.CommentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Comment controller")
 public class CommentController {
 
     private final CommentService commentService;
@@ -35,6 +38,7 @@ public class CommentController {
         return null; // TODO: SecurityContext
     }
 
+    @Operation(summary = "createComment", description = "Add comment to a book")
     @PostMapping("/api/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentRespDto createComment(@Valid @RequestBody CommentReqDto request, HttpServletRequest httpRequest) {
@@ -45,7 +49,7 @@ public class CommentController {
                 .user(getCurrentUser())
                 .actionType(ActionType.REVIEW_CREATE)
                 .entityType(Comment.class.getSimpleName())
-                .entityId(respDto.getId())
+                .entityId(respDto.id())
                 .details("Пользователь " + request.getUserId() + " оставил комментарий к книге " + request.getBookId())
                 .endpoint(httpRequest.getRequestURI())
                 .httpMethod(httpRequest.getMethod())
@@ -55,6 +59,7 @@ public class CommentController {
         return respDto;
     }
 
+    @Operation(summary = "updateComment", description = "Update/edit comment")
     @PutMapping("/api/comment/{id}")
     public CommentRespDto updateComment(@PathVariable Long id,
                                         @Valid @RequestBody CommentReqDto request,
@@ -75,6 +80,7 @@ public class CommentController {
         return respDto;
     }
 
+    @Operation(summary = "deleteComment", description = "Delete comment")
     @DeleteMapping("/api/comment/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long id, HttpServletRequest httpRequest) {
@@ -93,11 +99,13 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "getCommentsByBook", description = "Get all comments to a book")
     @GetMapping("/api/comment/book/{bookId}")
     public List<CommentRespDto> getCommentsByBook(@PathVariable Long bookId) {
         return commentService.getCommentsByBook(bookId);
     }
 
+    @Operation(summary = "getCommentsByUser", description = "Get all user's comments")
     @GetMapping("/api/comment/user/{userId}")
     public List<CommentRespDto> getCommentsByUser(@PathVariable Long userId) {
         return commentService.getCommentsByUser(userId);

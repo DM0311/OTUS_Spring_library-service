@@ -1,35 +1,34 @@
 package com.otus.library.library_service.dto.response;
 
 import com.otus.library.library_service.model.enums.BookingStatus;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class BookingRespDto {
+public record BookingRespDto(
 
-    private Long id;
+        Long id,
 
-    private Long userId;
+        Long userId,
 
-    private String userName;
+        String userName,
 
-    private Long bookId;
+        Long bookId,
 
-    private String bookTitle;
+        String bookTitle,
 
-    private LocalDateTime bookingDate;
+        LocalDateTime bookingDate,
 
-    private LocalDateTime dueDate;
+        LocalDateTime dueDate,
 
-    private LocalDateTime actualReturnDate;
+        LocalDateTime actualReturnDate,
 
-    private BookingStatus status;
+        BookingStatus status,
 
-    private boolean extended;
+        boolean extended,
 
-    private int extensionCount;
+        int extensionCount,
 
-    private LocalDateTime createdAt;
+        LocalDateTime createdAt
 
+) {
 }

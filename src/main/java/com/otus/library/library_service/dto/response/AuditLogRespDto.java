@@ -1,32 +1,30 @@
 package com.otus.library.library_service.dto.response;
 
 import com.otus.library.library_service.model.enums.ActionType;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class AuditLogRespDto {
+public record AuditLogRespDto (
 
-    private Long id;
+     Long id,
 
-    private Long userId;
+     Long userId,
 
-    private String userName;
+     String userName,
 
-    private String userFullName;
+     String userFullName,
 
-    private ActionType actionType;
+     ActionType actionType,
 
-    private String entityType;
+     String entityType,
 
-    private Long entityId;
+     Long entityId,
 
-    private String details;
+     String details,
 
-    private String endpoint;
+     String endpoint,
 
-    private String httpMethod;
+     String httpMethod,
 
-    private LocalDateTime createdAt;
-}
+     LocalDateTime createdAt
+){}
