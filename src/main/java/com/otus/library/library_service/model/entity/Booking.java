@@ -18,7 +18,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 import java.time.LocalDateTime;
 
 @Data
@@ -69,7 +68,7 @@ public class Booking {
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-   //TODO - clean up
+    //TODO - clean up
 
 //    @PrePersist
 //    protected void onCreate() {

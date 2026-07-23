@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return prepareResponse(exception, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BookingException.class)
+    public ResponseEntity<ErrorResponseDto> handleBookingException(BookingException exception) {
+        return prepareResponse(exception, HttpStatus.FORBIDDEN);
+    }
+
     private ResponseEntity<ErrorResponseDto> prepareResponse(RuntimeException exception, HttpStatus status) {
         ErrorResponseDto error = new ErrorResponseDto(
                 status.value(),

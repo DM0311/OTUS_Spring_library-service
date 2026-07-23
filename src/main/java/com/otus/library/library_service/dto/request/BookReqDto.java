@@ -17,12 +17,10 @@ public class BookReqDto {
 
     private String description;
 
-    //TODO - точно ли нужно в запросах?
     @NotNull(message = "Укажите общее количество экземпляров")
     @Min(value = 1, message = "Количество должно быть больше 0")
     private Integer totalCopies;
 
-    //TODO - точно ли нужно в запросах?
     @NotNull(message = "Укажите количество доступных экземпляров")
     @Min(value = 0, message = "Количество не может быть отрицательным")
     private Integer availableCopies;

@@ -4,6 +4,7 @@ import com.otus.library.library_service.dto.request.BookReqDto;
 import com.otus.library.library_service.dto.response.BookRespDto;
 import com.otus.library.library_service.events.AuditEvent;
 import com.otus.library.library_service.model.entity.Book;
+import com.otus.library.library_service.model.entity.User;
 import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.services.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,11 +65,13 @@ public class BookController {
     @Operation(summary = "createBook", description = "Add a new book to the library")
     @PostMapping("/api/book")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookRespDto createBook(@Valid @RequestBody BookReqDto request, HttpServletRequest servletRequest) {
+    public BookRespDto createBook(@Valid @RequestBody BookReqDto request,
+                                  Authentication authentication,
+                                  HttpServletRequest servletRequest) {
         BookRespDto bookRespDto = bookService.create(request);
-        //TODO: добавить пользователя
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(null)
+                .user(user)
                 .actionType(ActionType.BOOK_CREATE)
                 .entityType(Book.class.getSimpleName())
                 .entityId(bookRespDto.id())
@@ -82,12 +86,13 @@ public class BookController {
     @PutMapping("api/book/{id}")
     public BookRespDto updateBook(@PathVariable Long id,
                                   @Valid @RequestBody BookReqDto request,
+                                  Authentication authentication,
                                   HttpServletRequest httpRequest) {
         BookRespDto response = bookService.updateBook(id, request);
+        User user = (User) authentication.getPrincipal();
 
         eventPublisher.publishEvent(AuditEvent.builder()
-                //TODO: добавить пользователя
-                .user(null)
+                .user(user)
                 .actionType(ActionType.BOOK_UPDATE)
                 .entityType(Book.class.getSimpleName())
                 .entityId(id)

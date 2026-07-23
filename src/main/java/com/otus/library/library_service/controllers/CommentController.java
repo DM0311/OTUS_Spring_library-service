@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,19 +35,17 @@ public class CommentController {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private User getCurrentUser() {
-        return null; // TODO: SecurityContext
-    }
-
     @Operation(summary = "createComment", description = "Add comment to a book")
     @PostMapping("/api/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentRespDto createComment(@Valid @RequestBody CommentReqDto request, HttpServletRequest httpRequest) {
+    public CommentRespDto createComment(@Valid @RequestBody CommentReqDto request,
+                                        Authentication authentication,
+                                        HttpServletRequest httpRequest) {
 
         CommentRespDto respDto = commentService.createComment(request);
-
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.REVIEW_CREATE)
                 .entityType(Comment.class.getSimpleName())
                 .entityId(respDto.id())
@@ -63,11 +62,12 @@ public class CommentController {
     @PutMapping("/api/comment/{id}")
     public CommentRespDto updateComment(@PathVariable Long id,
                                         @Valid @RequestBody CommentReqDto request,
+                                        Authentication authentication,
                                         HttpServletRequest httpRequest) {
         CommentRespDto respDto = commentService.updateComment(id, request);
-
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.REVIEW_UPDATE)
                 .entityType(Comment.class.getSimpleName())
                 .entityId(id)
@@ -83,12 +83,14 @@ public class CommentController {
     @Operation(summary = "deleteComment", description = "Delete comment")
     @DeleteMapping("/api/comment/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@PathVariable Long id, HttpServletRequest httpRequest) {
+    public void deleteComment(@PathVariable Long id,
+                              Authentication authentication,
+                              HttpServletRequest httpRequest) {
 
         commentService.deleteComment(id);
-
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.REVIEW_DELETE)
                 .entityType(Comment.class.getSimpleName())
                 .entityId(id)

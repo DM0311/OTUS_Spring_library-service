@@ -8,7 +8,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class NotificationEvent {
+
     private final User user;
+
     private final String message;
+
     private final NotificationType type;
 }

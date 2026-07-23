@@ -5,7 +5,6 @@ import com.otus.library.library_service.dto.response.BookRespDto;
 import com.otus.library.library_service.model.entity.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {AuthorMapper.class, GenreMapper.class})
 public interface BookMapper {
@@ -15,9 +14,4 @@ public interface BookMapper {
     Book toEntity(BookReqDto request);
 
     BookRespDto toResponse(Book book);
-
-    //TODO - clean up
-    @Mapping(target = "authors", ignore = true)
-    @Mapping(target = "genres", ignore = true)
-    void updateEntity(@MappingTarget Book entity, BookReqDto request);
 }

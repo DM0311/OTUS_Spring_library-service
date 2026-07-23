@@ -52,7 +52,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public List<BookRespDto> searchBooks(String title, String author, Long genreId, String year) {
         return bookRepository.searchBooks(title, author, genreId, year)
-                .stream(   )
+                .stream()
                 .map(mapper::toResponse)
                 .toList();
     }

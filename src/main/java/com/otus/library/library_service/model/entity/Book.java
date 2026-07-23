@@ -64,8 +64,6 @@ public class Book {
     @Column(length = 1000)
     private String description;
 
-    //TODO - clean up
-    //    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "books_authors",
@@ -73,8 +71,6 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
 
-    //TODO - clean up
-    //    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "books_genres",

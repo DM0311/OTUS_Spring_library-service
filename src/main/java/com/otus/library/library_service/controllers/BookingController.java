@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,23 +36,20 @@ public class BookingController {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private User getCurrentUser() {
-        return null; // TODO: заменить на SecurityContext
-    }
-
     @Operation(summary = "createBooking", description = "Create booking - take a book for reading.")
     @PostMapping("/api/booking")
     @ResponseStatus(HttpStatus.CREATED)
     public BookingRespDto createBooking(@Valid @RequestBody BookingReqDto request,
+                                        Authentication authentication,
                                         HttpServletRequest httpRequest) {
         BookingRespDto bookingResp = bookingService.createBooking(
                 request.getUserId(),
                 request.getBookId(),
                 request.getDaysToAdd()
         );
-
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.BOOKING_CREATE)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(bookingResp.id())
@@ -67,10 +65,12 @@ public class BookingController {
     @Operation(summary = "prolongBooking", description = "Prolong reading time.")
     @PutMapping("/api/booking/{id}/prolong")
     public BookingRespDto prolongBooking(@PathVariable Long id,
+                                         Authentication authentication,
                                          HttpServletRequest httpRequest) {
         BookingRespDto bookingResp = bookingService.extendBooking(id);
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.BOOKING_CREATE)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(id)
@@ -85,10 +85,12 @@ public class BookingController {
     @Operation(summary = "returnBook", description = "Return book back.")
     @PutMapping("/api/booking/{id}/return")
     public BookingRespDto returnBook(@PathVariable Long id,
+                                     Authentication authentication,
                                      HttpServletRequest httpRequest) {
         BookingRespDto bookingResp = bookingService.returnBook(id);
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.BOOKING_RETURN)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(id)
@@ -103,10 +105,12 @@ public class BookingController {
     @DeleteMapping("/api/booking/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelBooking(@PathVariable Long id,
+                              Authentication authentication,
                               HttpServletRequest httpRequest) {
         bookingService.cancelBooking(id);
+        User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
-                .user(getCurrentUser())
+                .user(user)
                 .actionType(ActionType.BOOKING_CANCEL)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(id)
@@ -130,8 +134,7 @@ public class BookingController {
 
     @Operation(summary = "getBookingById", description = "Get definite booking by ID.")
     @GetMapping("/api/booking/admin/{bookingId}")
-    public BookingRespDto getBookingById(@PathVariable Long
-                                                     bookingId) {
+    public BookingRespDto getBookingById(@PathVariable Long bookingId) {
         return bookingService.getBookingById(bookingId);
     }
 }

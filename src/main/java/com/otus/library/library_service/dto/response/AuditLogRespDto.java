@@ -4,27 +4,28 @@ import com.otus.library.library_service.model.enums.ActionType;
 
 import java.time.LocalDateTime;
 
-public record AuditLogRespDto (
+public record AuditLogRespDto(
 
-     Long id,
+        Long id,
 
-     Long userId,
+        Long userId,
 
-     String userName,
+        String userName,
 
-     String userFullName,
+        String userFullName,
 
-     ActionType actionType,
+        ActionType actionType,
 
-     String entityType,
+        String entityType,
 
-     Long entityId,
+        Long entityId,
 
-     String details,
+        String details,
 
-     String endpoint,
+        String endpoint,
 
-     String httpMethod,
+        String httpMethod,
 
-     LocalDateTime createdAt
-){}
+        LocalDateTime createdAt
+) {
+}

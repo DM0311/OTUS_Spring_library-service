@@ -25,9 +25,6 @@ import java.util.List;
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     private final BookingRepository bookingRepository;
 
     private final UserRepository userRepository;
@@ -36,24 +33,17 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingMapper mapper;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     @Transactional
     public BookingRespDto createBooking(Long userId, Long bookId, Integer daysToAdd) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
-        if (user.isBlocked()) {
-            throw new BookingException("Пользователь заблокирован");
-        }
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга не найдена"));
-        if (book.getAvailableCopies() <= 0) {
-            throw new BookingException("Нет доступных экземпляров книги");
-        }
-
-        if (bookingRepository.findActiveBookingByUserAndBook(userId, bookId, BookingStatus.ACTIVE).isPresent()) {
-            throw new BookingException("У вас уже есть активное бронирование этой книги");
-        }
 
         Booking booking = new Booking();
         booking.setUser(user);
@@ -153,5 +143,21 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findById(id)
                 .map(mapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Бронирование не найдено"));
+    }
+
+    private boolean check() {
+
+        //        if (user.isBlocked()) {
+//            throw new BookingException("Пользователь заблокирован");
+//        }
+
+        //        if (book.getAvailableCopies() <= 0) {
+//            throw new BookingException("Нет доступных экземпляров книги");
+//        }
+
+        //        if (bookingRepository.findActiveBookingByUserAndBook(userId, bookId, BookingStatus.ACTIVE).isPresent()) {
+//            throw new BookingException("У вас уже есть активное бронирование этой книги");
+//        }
+        return true;
     }
 }
