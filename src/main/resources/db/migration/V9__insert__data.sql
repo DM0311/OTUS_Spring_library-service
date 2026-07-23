@@ -24,7 +24,7 @@ VALUES ('admin@library.com', 'admin', 'Администратор', '$2a$10$P9w.
        ('ivanov@mail.ru', 'ivanov', 'Иван Иванов', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K',
         false, NULL, 0, CURRENT_TIMESTAMP),
        ('petrov@mail.ru', 'petrov', 'Пётр Петров', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K', true,
-        CURRENT_TIMESTAMP + INTERVAL '7 days', 5, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP + INTERVAL '7' DAY, 5, CURRENT_TIMESTAMP),
        ('sidorova@mail.ru', 'sidorova', 'Анна Сидорова', '$2a$10$P9w.uLF4s7lUlfLyLtUk5Ok.C36pyZGiEq.2wS/vyhIs37ZCU.Q/K',
         false, NULL, 2, CURRENT_TIMESTAMP);
 
@@ -35,7 +35,7 @@ VALUES (1, 'ADMIN'),
        (3, 'USER'),
        (4, 'USER');
 
-INSERT INTO books (title, year, description, total_copies, available_copies, rating, created_at)
+INSERT INTO books (title, "year", description, total_copies, available_copies, rating, created_at)
 VALUES ('Война и мир', '1869',
         'Великий роман-эпопея о жизни русского общества в эпоху наполеоновских войн. Сложные судьбы, любовь, война и философские размышления.',
         5, 5, 4.8, CURRENT_TIMESTAMP),
