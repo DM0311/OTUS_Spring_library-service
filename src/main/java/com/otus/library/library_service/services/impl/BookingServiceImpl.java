@@ -39,20 +39,21 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingRespDto createBooking(Long userId, Long bookId, Integer daysToAdd) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга не найдена"));
 
+        check(user, book);
+
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setBook(book);
         booking.setStatus(BookingStatus.ACTIVE);
         booking.setBookingDate(LocalDateTime.now());
-        if (daysToAdd == null || daysToAdd <= 0) {
-            daysToAdd = 14;
-        }
+        daysToAdd = (daysToAdd == null || daysToAdd <= 0) ? 14 : daysToAdd;
         booking.setDueDate(LocalDateTime.now().plusDays(daysToAdd));
 
         book.decreaseAvailableCopies();
@@ -145,19 +146,20 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Бронирование не найдено"));
     }
 
-    private boolean check() {
+    private void check(User user, Book book) {
 
-        //        if (user.isBlocked()) {
-//            throw new BookingException("Пользователь заблокирован");
-//        }
+        if (user.isBlocked()) {
+            throw new BookingException("Пользователь заблокирован");
+        }
 
-        //        if (book.getAvailableCopies() <= 0) {
-//            throw new BookingException("Нет доступных экземпляров книги");
-//        }
+        if (book.getAvailableCopies() <= 0) {
+            throw new BookingException("Нет доступных экземпляров книги");
+        }
 
-        //        if (bookingRepository.findActiveBookingByUserAndBook(userId, bookId, BookingStatus.ACTIVE).isPresent()) {
-//            throw new BookingException("У вас уже есть активное бронирование этой книги");
-//        }
-        return true;
+        if (bookingRepository.findActiveBookingByUserAndBook(user.getId(),
+                book.getId(),
+                BookingStatus.ACTIVE).isPresent()) {
+            throw new BookingException("У вас уже есть активное бронирование этой книги");
+        }
     }
 }

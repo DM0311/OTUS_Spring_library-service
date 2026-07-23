@@ -1,13 +1,18 @@
 package com.otus.library.library_service.services;
 
+import com.otus.library.library_service.events.AuditEvent;
+import com.otus.library.library_service.events.NotificationEvent;
 import com.otus.library.library_service.model.entity.Booking;
 import com.otus.library.library_service.model.entity.User;
+import com.otus.library.library_service.model.enums.ActionType;
 import com.otus.library.library_service.model.enums.BookingStatus;
+import com.otus.library.library_service.model.enums.NotificationType;
 import com.otus.library.library_service.repositories.BookingRepository;
 import com.otus.library.library_service.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +24,21 @@ import java.util.List;
 @Component
 public class OverdueScheduler {
 
+    private static final String OVERDUE_CHECK = "Запуск проверки просроченных бронирований";
+
+    private static final String AUTO_UNBLOCK = "Запуск разблокировки пользователей";
+
     private final BookingRepository bookingRepository;
 
     private final UserRepository userRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void checkOverdueBookings() {
 
-        log.info("Запуск проверки просроченных бронирований");
+        publishAuditEvent(ActionType.SCHEDULER_RUN, OverdueScheduler.class.getSimpleName(), OVERDUE_CHECK, null);
 
         LocalDateTime now = LocalDateTime.now();
         List<Booking> overdueBookings = bookingRepository.findByStatusAndDueDateBefore(BookingStatus.ACTIVE, now);
@@ -50,31 +61,32 @@ public class OverdueScheduler {
         int penalty = user.getPenaltyPoints() + 1;
         user.setPenaltyPoints(penalty);
 
+        publishNotificationEvent(user, "Вы просрочили книгу - начислен штрафной балл.", NotificationType.OVERDUE);
+
         if (penalty >= 10) {
             user.setBlocked(true);
             user.setBlockedUntil(LocalDateTime.now().plusDays(30));
+            String notificationMessage = "Аккаунт заблокирован - превышение штрафных баллов.";
+            publishNotificationEvent(user, notificationMessage, NotificationType.USER_BLOCKED);
+            publishAuditEvent(ActionType.USER_AUTO_BLOCKED, User.class.getSimpleName(), notificationMessage, user);
 
-            log.warn("Пользователь {} (ID: {}) заблокирован за превышение штрафных баллов ({} шт.)",
-                    user.getUserName(), user.getId(), penalty);
-            // TODO: создать уведомление о блокировке
         } else {
-            log.info("Пользователю {} начислен штрафной балл, всего {}", user.getUserName(), penalty);
-            // TODO: создать уведомление о начислении штрафа
+            String notificationMessage = "Начислен штрафной балл. Всего: " + penalty;
+            publishNotificationEvent(user, notificationMessage, NotificationType.PENALTY);
+            publishAuditEvent(ActionType.PENALTY_APPLIED, User.class.getSimpleName(), notificationMessage, user);
         }
 
         userRepository.save(user);
 
         booking.setStatus(BookingStatus.OVERDUE);
         bookingRepository.save(booking);
-
-        // TODO: создать уведомление о просрочке
     }
 
     @Scheduled(cron = "0 10 0 * * ?")
     @Transactional
     public void unblockUsers() {
 
-        log.info("Запуск разблокировки пользователей");
+        publishAuditEvent(ActionType.SCHEDULER_RUN, OverdueScheduler.class.getSimpleName(), AUTO_UNBLOCK, null);
 
         List<User> blockedUsers = userRepository.findByIsBlockedTrueAndBlockedUntilBefore(LocalDateTime.now());
 
@@ -87,8 +99,26 @@ public class OverdueScheduler {
             user.setBlocked(false);
             user.setBlockedUntil(null);
             userRepository.save(user);
-            log.info("Пользователь {} (ID: {}) разблокирован", user.getUserName(), user.getId());
-            // TODO: создать уведомление о разблокировке
+            String notificationMessage = "Аккаунт разблокирован";
+            publishNotificationEvent(user, notificationMessage, NotificationType.USER_UNBLOCKED);
+            publishAuditEvent(ActionType.USER_UNBLOCK, User.class.getSimpleName(), notificationMessage, user);
         }
+    }
+
+    private void publishAuditEvent(ActionType actionType, String entityType, String details, User user) {
+        eventPublisher.publishEvent(AuditEvent.builder()
+                .actionType(actionType)
+                .entityType(entityType)
+                .details(details)
+                .user(user)
+                .build());
+    }
+
+    private void publishNotificationEvent(User user, String message, NotificationType notificationType) {
+        eventPublisher.publishEvent(NotificationEvent.builder()
+                .user(user)
+                .message(message)
+                .type(notificationType)
+                .build());
     }
 }

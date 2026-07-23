@@ -32,19 +32,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentRespDto createComment(CommentReqDto request) {
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден"));
-        Book book = bookRepository.findById(request.getBookId())
+        Book book = bookRepository.findById(request.bookId())
                 .orElseThrow(() -> new ResourceNotFoundException("Книга не найдена"));
 
         Comment comment = new Comment();
         comment.setUser(user);
         comment.setBook(book);
-        comment.setRating(request.getRating());
-        comment.setCommentText(request.getCommentText());
+        comment.setRating(request.rating());
+        comment.setCommentText(request.commentText());
 
         CommentRespDto saved = mapper.toResponse(commentRepository.save(comment));
-        recalculateBookRating(request.getBookId());
+        recalculateBookRating(request.bookId());
 
         return saved;
     }
@@ -55,8 +55,8 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Комментарий не найден"));
-        comment.setRating(request.getRating());
-        comment.setCommentText(request.getCommentText());
+        comment.setRating(request.rating());
+        comment.setCommentText(request.commentText());
         Comment updated = commentRepository.save(comment);
         recalculateBookRating(comment.getBook().getId());
         return mapper.toResponse(updated);

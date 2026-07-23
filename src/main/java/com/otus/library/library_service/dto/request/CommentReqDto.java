@@ -3,20 +3,20 @@ package com.otus.library.library_service.dto.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
-@Data
-public class CommentReqDto {
 
-    @NotNull(message = "ID пользователя обязательно")
-    private Long userId;
+public record CommentReqDto(
 
-    @NotNull(message = "ID книги обязательно")
-    private Long bookId;
+        @NotNull(message = "ID пользователя обязательно")
+        long userId,
 
-    @Min(value = 1, message = "Рейтинг должен быть от 1 до 5")
-    @Max(value = 5, message = "Рейтинг должен быть от 1 до 5")
-    private int rating;
+        @NotNull(message = "ID книги обязательно")
+        long bookId,
 
-    private String commentText;
+        @Min(value = 1, message = "Рейтинг должен быть от 1 до 5")
+        @Max(value = 5, message = "Рейтинг должен быть от 1 до 5")
+        int rating,
+
+        String commentText
+) {
 }

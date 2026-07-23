@@ -49,7 +49,7 @@ public class CommentController {
                 .actionType(ActionType.REVIEW_CREATE)
                 .entityType(Comment.class.getSimpleName())
                 .entityId(respDto.id())
-                .details("Пользователь " + request.getUserId() + " оставил комментарий к книге " + request.getBookId())
+                .details("Пользователь " + request.userId() + " оставил комментарий к книге " + request.bookId())
                 .endpoint(httpRequest.getRequestURI())
                 .httpMethod(httpRequest.getMethod())
                 .build()

@@ -62,17 +62,17 @@ public class BookServiceImpl implements BookService {
     public BookRespDto create(BookReqDto request) {
 
         Book book = new Book();
-        book.setTitle(request.getTitle());
-        book.setYear(request.getYear());
-        book.setDescription(request.getDescription());
-        book.setTotalCopies(request.getTotalCopies());
-        book.setAvailableCopies(request.getAvailableCopies());
+        book.setTitle(request.title());
+        book.setYear(request.year());
+        book.setDescription(request.description());
+        book.setTotalCopies(request.totalCopies());
+        book.setAvailableCopies(request.availableCopies());
         book.setRating(0.0);
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.authorIds()));
         book.setAuthors(authors);
 
-        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(request.getGenreIds()));
+        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(request.genreIds()));
         book.setGenres(genres);
 
         Book saved = bookRepository.save(book);
@@ -85,16 +85,16 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Книга не найдена. id: " + id));
 
-        book.setTitle(request.getTitle());
-        book.setYear(request.getYear());
-        book.setDescription(request.getDescription());
-        book.setTotalCopies(request.getTotalCopies());
-        book.setAvailableCopies(request.getAvailableCopies());
+        book.setTitle(request.title());
+        book.setYear(request.year());
+        book.setDescription(request.description());
+        book.setTotalCopies(request.totalCopies());
+        book.setAvailableCopies(request.availableCopies());
 
-        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.getAuthorIds()));
+        Set<Author> authors = new HashSet<>(authorRepository.findAllById(request.authorIds()));
         book.setAuthors(authors);
 
-        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(request.getGenreIds()));
+        Set<Genre> genres = new HashSet<>(genreRepository.findAllById(request.genreIds()));
         book.setGenres(genres);
 
         Book saved = bookRepository.save(book);

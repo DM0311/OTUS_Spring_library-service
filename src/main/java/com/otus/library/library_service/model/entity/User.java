@@ -82,4 +82,5 @@ public class User {
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private LocalDateTime createdAt;
+
 }

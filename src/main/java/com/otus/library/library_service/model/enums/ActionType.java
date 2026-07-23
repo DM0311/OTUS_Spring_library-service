@@ -2,12 +2,8 @@ package com.otus.library.library_service.model.enums;
 
 public enum ActionType {
 
-    LOGIN,
-    LOGOUT,
     REGISTER,
-    REFRESH_TOKEN,
 
-    USER_CREATE,
     USER_DELETE,
     USER_UPDATE,
     USER_BLOCK,
@@ -18,14 +14,11 @@ public enum ActionType {
     BOOK_CREATE,
     BOOK_UPDATE,
     BOOK_DELETE,
-    BOOK_RESTORE,
 
     GENRE_CREATE,
-    GENRE_UPDATE,
     GENRE_DELETE,
 
     AUTHOR_CREATE,
-    AUTHOR_UPDATE,
     AUTHOR_DELETE,
 
     REVIEW_CREATE,
@@ -37,10 +30,8 @@ public enum ActionType {
     BOOKING_RETURN,
     BOOKING_CANCEL,
     BOOKING_OVERDUE,
-    BOOKING_AUTO_RETURN,
 
     PENALTY_APPLIED,
     USER_AUTO_BLOCKED,
-    NOTIFICATION_SENT,
     SCHEDULER_RUN
 }

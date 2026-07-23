@@ -17,13 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    public static final String[] PUBLIC_GET = {"/api/books/**", "/api/authors/**", "/api/genres/**"};
+    public static final String[] PUBLIC_GET = {"/api/book/**", "/api/author/**", "/api/genre/**"};
 
-    public static final String[] AUTHENTICATED = {"/api/bookings/**", "/api/comments/**", "/api/notifications/**"};
+    public static final String[] AUTHENTICATED = {"/api/booking/**", "/api/comment/**", "/api/notification/**"};
 
-    public static final String[] ADMIN_BUSINESS_LOGIC = {"/api/books/**", "/api/authors/**", "/api/genres/**"};
+    public static final String[] ADMIN_BUSINESS_LOGIC = {"/api/book/**", "/api/author/**", "/api/genre/**"};
 
-    public static final String[] ADMIN_SYSTEM = {"/api/users/**", "/api/admin/**", "/api/bookings/admin/**"};
+    public static final String[] ADMIN_SYSTEM = {"/api/user/**", "/api/admin/**", "/api/booking/admin/**"};
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //public
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         //authorized
                         .requestMatchers(AUTHENTICATED).authenticated()
                         //admin

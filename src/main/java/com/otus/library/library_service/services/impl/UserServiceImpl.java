@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserRespDto create(UserReqDto request) {
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyExistsException("Пользователь с email " + request.getEmail() + " уже существует");
+        if (userRepository.existsByEmail(request.email())) {
+            throw new UserAlreadyExistsException("Пользователь с email " + request.email() + " уже существует");
         }
 
         User saved = userRepository.save(mapper.toEntity(request));

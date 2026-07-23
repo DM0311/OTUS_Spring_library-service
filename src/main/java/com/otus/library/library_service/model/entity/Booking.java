@@ -67,14 +67,4 @@ public class Booking {
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private LocalDateTime createdAt;
-
-    //TODO - clean up
-
-//    @PrePersist
-//    protected void onCreate() {
-//        if (dueDate == null) {
-//            dueDate = bookingDate.plusDays(14);
-//        }
-//    }
-
 }

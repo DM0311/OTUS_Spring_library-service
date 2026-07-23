@@ -48,7 +48,7 @@ public class UserController {
         UserRespDto userRespDto = userService.create(request);
         eventPublisher.publishEvent(AuditEvent.builder()
                 .user(null)
-                .actionType(ActionType.USER_CREATE)
+                .actionType(ActionType.REGISTER)
                 .entityType(User.class.getSimpleName())
                 .entityId(userRespDto.id())
                 .details("Создан пользователь " + userRespDto.fullName() + " с id: " + userRespDto.id())

@@ -43,9 +43,9 @@ public class BookingController {
                                         Authentication authentication,
                                         HttpServletRequest httpRequest) {
         BookingRespDto bookingResp = bookingService.createBooking(
-                request.getUserId(),
-                request.getBookId(),
-                request.getDaysToAdd()
+                request.userId(),
+                request.bookId(),
+                request.daysToAdd()
         );
         User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
@@ -53,7 +53,7 @@ public class BookingController {
                 .actionType(ActionType.BOOKING_CREATE)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(bookingResp.id())
-                .details(String.format("Пользователь %d взял книгу %d", request.getUserId(), request.getBookId()))
+                .details(String.format("Пользователь %d взял книгу %d", request.userId(), request.bookId()))
                 .endpoint(httpRequest.getRequestURI())
                 .httpMethod(httpRequest.getMethod())
                 .build()
@@ -71,7 +71,7 @@ public class BookingController {
         User user = (User) authentication.getPrincipal();
         eventPublisher.publishEvent(AuditEvent.builder()
                 .user(user)
-                .actionType(ActionType.BOOKING_CREATE)
+                .actionType(ActionType.BOOKING_EXTEND)
                 .entityType(Booking.class.getSimpleName())
                 .entityId(id)
                 .details("Продлено бронирование " + id)
@@ -122,8 +122,9 @@ public class BookingController {
 
     @Operation(summary = "getMyBookings", description = "Get all bookings of current user.")
     @GetMapping("/api/booking/my")
-    public List<BookingRespDto> getMyBookings(@RequestParam Long userId) {
-        return bookingService.getBookingsByUser(userId);
+    public List<BookingRespDto> getMyBookings(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return bookingService.getBookingsByUser(user.getId());
     }
 
     @Operation(summary = "getAllBookings", description = "Get all bookings.")
